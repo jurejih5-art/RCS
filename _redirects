@@ -1,0 +1,14 @@
+# Redirect old .html addresses to clean URLs
+/services.html /services 301
+/about.html /about 301
+/vision.html /vision 301
+/team.html /team 301
+/contact.html /contact 301
+/index.html / 301
+
+# Serve the existing HTML files at clean URLs
+/services /services.html 200
+/about /about.html 200
+/vision /vision.html 200
+/team /team.html 200
+/contact /contact.html 200
