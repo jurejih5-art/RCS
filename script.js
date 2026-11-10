@@ -22,7 +22,7 @@
 
   // Fade text and blocks in as they enter the viewport and out as they leave.
   document.documentElement.classList.add('js-ready');
-  const selector = '.hero-copy > *, .hero-visual, .stats, .heading > *, .card, .about-visual, .about-grid > div:not(.about-visual) > *, .ind-list > *, .member, .cta-inner > *, .contact-grid > div > *, .contact-form, .foot-top > *';
+  const selector = '.hero-copy > *, .stats, .heading > *, .card, .about-visual, .about-grid > div:not(.about-visual) > *, .ind-list > *, .member, .cta-inner > *, .contact-grid > div > *, .contact-form, .foot-top > *';
   document.querySelectorAll('.reveal').forEach(el => el.classList.remove('reveal'));
   const targets = [...document.querySelectorAll(selector)];
   targets.forEach(el => el.classList.add('reveal'));
@@ -33,6 +33,29 @@
     targets.forEach(item => observer.observe(item));
   } else {
     targets.forEach(item => item.classList.add('is-visible'));
+  }
+
+  // Home hero: rotating headline text and image frame, fading in and out together
+  const slides = [...document.querySelectorAll('.hero-rot .slide')];
+  const frames = [...document.querySelectorAll('.hero-bg img')];
+  const dotsBox = document.querySelector('.hero-dots');
+  if (slides.length > 1) {
+    let current = 0, timer;
+    const dots = slides.map((_, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('aria-label', 'Show message ' + (i + 1));
+      b.addEventListener('click', () => { show(i); restart(); });
+      dotsBox && dotsBox.appendChild(b);
+      return b;
+    });
+    const show = i => {
+      current = i;
+      slides.forEach((s, n) => s.classList.toggle('is-active', n === i));
+      frames.forEach((f, n) => f.classList.toggle('is-active', n === i));
+      dots.forEach((d, n) => d.classList.toggle('is-active', n === i));
+    };
+    const restart = () => { clearInterval(timer); timer = setInterval(() => show((current + 1) % slides.length), 5500); };
+    show(0); restart();
   }
 
   // Submit through FormSubmit's AJAX endpoint without leaving this page.
